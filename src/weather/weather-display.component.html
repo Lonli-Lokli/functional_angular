@@ -1,0 +1,166 @@
+<h2>Type in city name to see the temperature</h2>
+<form [formGroup]="searchForm">
+  <label>
+    City:
+  </label>
+    <input
+      class="form-control"
+      type="text"
+      id="weatherLocation"
+      aria-describedby="weatherLocation"
+      placeholder="Please enter a Location"
+      formControlName="city"
+    />
+ 
+  <button type="submit" (click)="doSearch()">Search</button>
+  <ng-container *ngIf="stations.length">
+    <p>
+      <label>Stations: </label>
+      <select [(ngModel)]="station" [ngModelOptions]="{standalone: true}" (ngModelChange)="changeStation()">
+        <option *ngFor="let station of stations" [ngValue]="station" >{{ station.station }}</option>
+      </select>
+    </p>
+  </ng-container>
+</form>
+
+<div *ngIf="station">
+  <form [formGroup]="weatherForm">
+
+
+    <img *ngIf="station?.icon?.icon" [src]="station.icon.icon | extend:'https://www.weatherbit.io/static/img/icons/':'.png'"> 
+    <fieldset disabled>
+      <legend>Weather</legend>
+
+      <p>
+        <label for="temperature">Temperature</label>
+        <input type="text" id="temperature" formControlName="temperature" />
+       
+      </p>
+
+      <p>
+        <label for="relativeHumidity">Relative Humidity</label>
+        <input type="text" id="relativeHumidity" formControlName="relativeHumidity" />
+      </p>
+
+      <p>
+        <label for="feelLikeTemperature">'Feel Like' Temperature</label>
+        <input type="text" id="feelLikeTemperature" formControlName="feelLikeTemperature" />
+      </p>
+
+      <p>
+        <label for="snowfall">Snowfall</label>
+        <input type="text" id="snowfall" formControlName="snowfall" />
+      </p>
+
+      <p>
+        <label for="lastObservationTime">Last Observation Time</label>
+        <input type="text" id="lastObservationTime" formControlName="lastObservationTime" />
+      </p>
+    </fieldset>
+
+    <fieldset disabled>
+      <legend>Location</legend>
+      <p><label for="station">Station</label><input type="text" id="station" formControlName="station" /></p>
+
+      <p><label for="cityName">City Name</label><input type="text" id="cityName" formControlName="cityName" /></p>
+
+      <p>
+        <label for="countryCode">Country Code</label>
+        <input type="text" id="countryCode" formControlName="countryCode" />
+      </p>
+
+      <p><label for="latitude">Latitude</label><input type="text" id="latitude" formControlName="latitude" /></p>
+
+      <p>
+        <label for="liquidEquivalentPrecipitationRate">Liquid Equivalent Precipitation Rate</label>
+        <input type="text" id="liquidEquivalentPrecipitationRate" formControlName="liquidEquivalentPrecipitationRate" />
+      </p>
+
+      <p>
+        <label for="longitude">Longitude</label>
+        <input type="text" id="longitude" formControlName="longitude" />
+      </p>
+
+      <p>
+        <label for="stateCode">State Code</label>
+        <input type="text" id="stateCode" formControlName="stateCode" />
+      </p>
+
+      <p><label for="timezone">Timezone</label><input type="text" id="timezone" formControlName="timezone" /></p>
+    </fieldset>
+
+    <fieldset disabled>
+      <legend>Other</legend>
+
+      <p>
+        <label for="datetime">Datetime</label>
+        <input type="text" id="datetime" formControlName="datetime" />
+      </p>
+
+      <p>
+        <label for="airQualityIndex">Air Quality Index</label>
+        <input type="text" id="airQualityIndex" formControlName="airQualityIndex" />
+      </p>
+
+      <p>
+        <label for="cloudCoverage">Cloud Coverage</label>
+        <input type="text" id="cloudCoverage" formControlName="cloudCoverage" />
+      </p>
+
+      <p>
+        <label for="dewPoint">Dew Point</label>
+        <input type="text" id="dewPoint" formControlName="dewPoint" />
+      </p>
+
+      <p>
+        <label for="directNormalSolarIrradiance">Direct Normal Solar Irradiance</label>
+        <input type="text" id="directNormalSolarIrradiance" formControlName="directNormalSolarIrradiance" />
+      </p>
+
+      <p>
+        <label for="estimatedSolarRadiation">Estimated Solar Radiation</label>
+        <input type="text" id="estimatedSolarRadiation" formControlName="estimatedSolarRadiation" />
+      </p>
+
+      <p>
+        <label for="sunriseTime">Sunrise Time</label>
+        <input type="text" id="sunriseTime" formControlName="sunriseTime" />
+      </p>
+
+      <p>
+        <label for="sunset">Sunset</label>
+        <input type="text" id="sunset" formControlName="sunset" />
+      </p>
+
+      <p>
+        <label for="uvIndex">UV Index</label>
+        <input type="text" id="uvIndex" formControlName="uvIndex" />
+      </p>
+
+      <p>
+        <label for="visibility">Visibility</label>
+        <input type="text" id="visibility" formControlName="visibility" />
+      </p>
+
+      <p>
+        <label for="windDirection">Wind Direction</label>
+        <input type="text" id="windDirection" formControlName="windDirection" />
+      </p>
+
+      <p>
+        <label for="windSpeed">Wind Speed</label>
+        <input type="text" id="windSpeed" formControlName="windSpeed" />
+      </p>
+
+      <p>
+        <label for="partOfDay">Part of Day</label>
+        <input type="text" id="partOfDay" formControlName="partOfDay" />
+      </p>
+
+      <p>
+        <label for="seaLevelPressure">Sea Level Pressure</label>
+        <input type="text" id="seaLevelPressure" formControlName="seaLevelPressure" />
+      </p>
+    </fieldset>
+  </form>
+</div>
