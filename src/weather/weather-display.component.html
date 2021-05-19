@@ -13,16 +13,19 @@
     />
 
   <button type="submit" (click)="doSearch()">Search</button>
-  <div *ngIf="error; else noError">Error during request: {{error.message}}</div>
-  <ng-template #noError>
-    <ng-container *ngIf="stations.length">
+   <ng-container *fpIfRight="stations; else errorTpl; let ok">
+    <ng-container  *ngIf="ok.length">
       <p>
         <label>Stations: </label>
         <select [(ngModel)]="station" [ngModelOptions]="{standalone: true}" (ngModelChange)="changeStation()">
-        <option *ngFor="let station of stations" [ngValue]="station" >{{ station.station }}</option>
-      </select>
+          <option *ngFor="let station of ok" [ngValue]="station" >{{ station.station }}</option>
+        </select>
       </p>
-    </ng-container>
+    </ng-container>   
+  </ng-container>
+
+  <ng-template #errorTpl let-error>
+    <div>Error during request: {{error.message}}</div>
   </ng-template>
 </form>
 

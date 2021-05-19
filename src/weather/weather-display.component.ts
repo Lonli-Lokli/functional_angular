@@ -9,7 +9,8 @@ import { take } from "rxjs/operators";
 import { identity } from "./utils";
 import { CityStationWeather } from "../typings/weather.model";
 import { WeatherService } from "../weather-api/weather.service";
-import { HttpErrorResponse } from "@angular/common/http";
+import { Either, right } from '@sweet-monads/either';
+import { ServerError } from "../weather-api/errors";
 
 interface SearchForm {
   city?: string;
@@ -29,9 +30,8 @@ export class WeatherDisplayComponent {
     })
   );
   public weatherForm: FormGroup;
-  public stations: CityStationWeather[] = [];
-  public station: CityStationWeather | undefined;
-  public error: HttpErrorResponse | undefined;
+  public stations: Either<ServerError, CityStationWeather[]> = right<ServerError, CityStationWeather[]>([]);
+  public station: CityStationWeather | undefined;  
 
   constructor(private svc: WeatherService, private formBuilder: FormBuilder) {
     this.weatherForm = this.formBuilder.group(
@@ -71,17 +71,10 @@ export class WeatherDisplayComponent {
     this.svc
       .getWeather(identity<SearchForm>(this.searchForm.value).city)
       .pipe(take(1))
-      .subscribe(
-        (stations) => {
-          this.stations = stations;
-          this.error = undefined;
-        },
-        (err) => {
-          this.error = err;
-          this.stations = [];
-          this.station = undefined;
-        }
-      );
+      .subscribe(stations => {
+        this.stations = stations;
+        this.station = undefined;
+      });
   }
 
   public changeStation() {
