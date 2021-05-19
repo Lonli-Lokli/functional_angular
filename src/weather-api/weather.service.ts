@@ -13,8 +13,12 @@ export class WeatherService {
   constructor(private http: HttpClient) {}
 
   public getWeather(city: string): Observable<CityStationWeather[]> {
+    const key =
+      city === 'London' ? 'invalidKey' : 'af3eebbf434d4cbcadf99fb26c1b10ad';
     return this.http
-      .get<CityResponse>('https://api.weatherbit.io/v2.0/current?key=af3eebbf434d4cbcadf99fb26c1b10ad&city=' + city)
+      .get<CityResponse>(
+        `https://api.weatherbit.io/v2.0/current?key=${key}&city=${city}`
+      )
       .pipe(map(c => c.data.map(cityStationContractToDomainMapper)));
   }
 }

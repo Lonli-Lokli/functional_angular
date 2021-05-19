@@ -1,9 +1,9 @@
-<h2>Type in city name to see the temperature</h2>
+<h2>Type in city name to see the temperature (London should fail)</h2>
 <form [formGroup]="searchForm">
   <label>
     City:
   </label>
-    <input
+  <input
       class="form-control"
       type="text"
       id="weatherLocation"
@@ -11,30 +11,33 @@
       placeholder="Please enter a Location"
       formControlName="city"
     />
- 
+
   <button type="submit" (click)="doSearch()">Search</button>
-  <ng-container *ngIf="stations.length">
-    <p>
-      <label>Stations: </label>
-      <select [(ngModel)]="station" [ngModelOptions]="{standalone: true}" (ngModelChange)="changeStation()">
+  <div *ngIf="error; else noError">Error during request: {{error.message}}</div>
+  <ng-template #noError>
+    <ng-container *ngIf="stations.length">
+      <p>
+        <label>Stations: </label>
+        <select [(ngModel)]="station" [ngModelOptions]="{standalone: true}" (ngModelChange)="changeStation()">
         <option *ngFor="let station of stations" [ngValue]="station" >{{ station.station }}</option>
       </select>
-    </p>
-  </ng-container>
+      </p>
+    </ng-container>
+  </ng-template>
 </form>
 
 <div *ngIf="station">
   <form [formGroup]="weatherForm">
 
 
-    <img *ngIf="station?.icon?.icon" [src]="station.icon.icon | extend:'https://www.weatherbit.io/static/img/icons/':'.png'"> 
+    <img *ngIf="station?.icon?.icon" [src]="station.icon.icon | extend:'https://www.weatherbit.io/static/img/icons/':'.png'">
     <fieldset disabled>
       <legend>Weather</legend>
 
       <p>
         <label for="temperature">Temperature</label>
         <input type="text" id="temperature" formControlName="temperature" />
-       
+
       </p>
 
       <p>

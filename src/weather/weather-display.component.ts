@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
   FormControl,
-  FormGroup
-} from '@angular/forms';
-import { take } from 'rxjs/operators';
-import { identity } from './utils';
-import { CityStationWeather } from '../typings/weather.model';
-import { WeatherService } from '../weather-api/weather.service';
+  FormGroup,
+} from "@angular/forms";
+import { take } from "rxjs/operators";
+import { identity } from "./utils";
+import { CityStationWeather } from "../typings/weather.model";
+import { WeatherService } from "../weather-api/weather.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 interface SearchForm {
   city?: string;
@@ -17,19 +18,20 @@ interface SearchForm {
 export type asForm<T> = { [K in keyof T]: AbstractControl };
 
 @Component({
-  selector: 'weather-display',
-  templateUrl: './weather-display.component.html',
-  styleUrls: ['./weather-display.component.scss']
+  selector: "weather-display",
+  templateUrl: "./weather-display.component.html",
+  styleUrls: ["./weather-display.component.scss"],
 })
 export class WeatherDisplayComponent {
   public searchForm = new FormGroup(
     identity<asForm<SearchForm>>({
-      city: new FormControl('')
+      city: new FormControl(""),
     })
   );
   public weatherForm: FormGroup;
   public stations: CityStationWeather[] = [];
   public station: CityStationWeather | undefined;
+  public error: HttpErrorResponse | undefined;
 
   constructor(private svc: WeatherService, private formBuilder: FormBuilder) {
     this.weatherForm = this.formBuilder.group(
@@ -60,7 +62,7 @@ export class WeatherDisplayComponent {
         uvIndex: this.formBuilder.control(undefined),
         visibility: this.formBuilder.control(undefined),
         windDirection: this.formBuilder.control(undefined),
-        windSpeed: this.formBuilder.control(undefined)
+        windSpeed: this.formBuilder.control(undefined),
       })
     );
   }
@@ -69,7 +71,17 @@ export class WeatherDisplayComponent {
     this.svc
       .getWeather(identity<SearchForm>(this.searchForm.value).city)
       .pipe(take(1))
-      .subscribe(stations => (this.stations = stations));
+      .subscribe(
+        (stations) => {
+          this.stations = stations;
+          this.error = undefined;
+        },
+        (err) => {
+          this.error = err;
+          this.stations = [];
+          this.station = undefined;
+        }
+      );
   }
 
   public changeStation() {
